@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import * as userService from '../../services/userServce.js';
 import Spinner from '../LoadingOverlaps/Spinner.jsx';
 import Info from './Info.jsx';
+import CreateUser from './CreateUser.jsx';
 
 const Table = () => {
    const [users, setUsers] = useState([]);
    const [isLoading, setIsLoading] = useState(false);
    const [selectedUser, setSelectedUser] = useState(null);
    const [showInfo, setShowInfo] = useState(false);
+   const [showCreate, setShowCreate] = useState(false);
 
    useEffect(() => {
       setIsLoading(true);
@@ -24,14 +26,40 @@ const Table = () => {
       setShowInfo(true);
    };
 
+   //Show modal
+   const createUserClickHandler = () => {
+      setShowCreate(true);
+   };
+
+   //Create user submit handler
+   const userCreateHandler = async (e) => {
+      // Stop page from refreshing
+      e.preventDefault();
+
+      // Get form data
+      const data = Object.fromEntries(new FormData(e.currentTarget));
+
+      // Create new user at the server
+      const newUser = await userService.create(data);
+
+      // Add newly created user to the local state without the need of fetching users again (SAVES TIME)
+      setUsers((state) => [...state, newUser]);
+
+      // Close the modal
+      setShowCreate(false);
+   };
+
    return (
       <div className="table-wrapper">
          {/*If isLoading is true => render spinner */}
          {isLoading && <Spinner />}
          {showInfo && (
-            <Info
-               onClose={() => setShowInfo(false)}
-               userId={selectedUser}
+            <Info onClose={() => setShowInfo(false)} userId={selectedUser} />
+         )}
+         {showCreate && (
+            <CreateUser
+               onClose={() => setShowCreate(false)}
+               onCreateClick={userCreateHandler}
             />
          )}
 
@@ -148,7 +176,9 @@ const Table = () => {
                ))}
             </tbody>
          </table>
-         <button className="btn-add btn">Add new user</button>
+         <button className="btn-add btn" onClick={createUserClickHandler}>
+            Add new user
+         </button>
       </div>
    );
 };
