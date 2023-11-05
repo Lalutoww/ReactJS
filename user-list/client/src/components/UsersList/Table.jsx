@@ -1,6 +1,21 @@
 import Item from './Item.jsx';
+import { useEffect, useState } from 'react';
+import * as userService from '../../services/userServce.js';
 
 const Table = () => {
+   const [users, setUsers] = useState([]);
+   const [isLoading, setIsLoading] = useState(false);
+
+   useEffect(() => {
+      setIsLoading(true);
+
+      userService
+         .getAll()
+         .then((result) => setUsers(result))
+         .catch((err) => console.log(err))
+         .finally(() => setIsLoading(false));
+   }, []);
+   
    return (
       <div className="table-wrapper">
          <table className="table">
@@ -101,7 +116,18 @@ const Table = () => {
                </tr>
             </thead>
             <tbody>
-               <Item />
+               {users.map((user) => (
+                  <Item
+                     key={user._id}
+                     userId={user._id}
+                     createdAt={user.createdAt}
+                     email={user.email}
+                     firstName={user.firstName}
+                     imageUrl={user.imageUrl}
+                     lastName={user.lastName}
+                     phoneNumber={user.phoneNumber}
+                  />
+               ))}
             </tbody>
          </table>
          <button className="btn-add btn">Add new user</button>
