@@ -1,4 +1,4 @@
-import {formatDate} from '../../utils/formatDate.js'
+import { formatDate } from '../../utils/formatDate.js';
 
 const Item = ({
    userId,
@@ -8,7 +8,12 @@ const Item = ({
    phoneNumber,
    createdAt,
    imageUrl,
+   onInfoClick,
 }) => {
+   const infoClickHandler = () => {
+      onInfoClick(userId);
+   };
+
    return (
       <tr>
          <td>
@@ -59,7 +64,11 @@ const Item = ({
                   ></path>
                </svg>
             </button>
-            <button className="btn info-btn" title="Info">
+            <button
+               className="btn info-btn"
+               title="Info"
+               onClick={infoClickHandler}
+            >
                <svg
                   aria-hidden="true"
                   focusable="false"

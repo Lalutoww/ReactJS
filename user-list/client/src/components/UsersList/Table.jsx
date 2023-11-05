@@ -2,10 +2,13 @@ import Item from './Item.jsx';
 import { useEffect, useState } from 'react';
 import * as userService from '../../services/userServce.js';
 import Spinner from '../LoadingOverlaps/Spinner.jsx';
+import Info from './Info.jsx';
 
 const Table = () => {
    const [users, setUsers] = useState([]);
    const [isLoading, setIsLoading] = useState(false);
+   const [selectedUser, setSelectedUser] = useState(null);
+   const [showInfo, setShowInfo] = useState(false);
 
    useEffect(() => {
       setIsLoading(true);
@@ -16,10 +19,22 @@ const Table = () => {
          .finally(() => setIsLoading(false));
    }, []);
 
+   const userInfoClickHandler = async (userId) => {
+      setSelectedUser(userId);
+      setShowInfo(true);
+   };
+
    return (
       <div className="table-wrapper">
          {/*If isLoading is true => render spinner */}
          {isLoading && <Spinner />}
+         {showInfo && (
+            <Info
+               onClose={() => setShowInfo(false)}
+               userId={selectedUser}
+            />
+         )}
+
          <table className="table">
             <thead>
                <tr>
@@ -128,6 +143,7 @@ const Table = () => {
                      imageUrl={user.imageUrl}
                      lastName={user.lastName}
                      phoneNumber={user.phoneNumber}
+                     onInfoClick={userInfoClickHandler}
                   />
                ))}
             </tbody>
