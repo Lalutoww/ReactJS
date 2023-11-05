@@ -4,6 +4,7 @@ import * as userService from '../../services/userServce.js';
 import Spinner from '../LoadingOverlaps/Spinner.jsx';
 import Info from './Info.jsx';
 import CreateUser from './CreateUser.jsx';
+import DeleteUser from './DeleteUser.jsx';
 
 const Table = () => {
    const [users, setUsers] = useState([]);
@@ -11,6 +12,7 @@ const Table = () => {
    const [selectedUser, setSelectedUser] = useState(null);
    const [showInfo, setShowInfo] = useState(false);
    const [showCreate, setShowCreate] = useState(false);
+   const [showDelete, setShowDelete] = useState(false);
 
    useEffect(() => {
       setIsLoading(true);
@@ -49,6 +51,22 @@ const Table = () => {
       setShowCreate(false);
    };
 
+   const deleteButtonClickHandler = async (userId) => {
+      setSelectedUser(userId);
+      setShowDelete(true);
+   };
+
+   const userDeleteHandler = async() =>{
+      // Remove user from server
+      await userService.deleteUser(selectedUser);
+
+      // Remove user from state
+      setUsers(state => state.filter(user => user._id !== selectedUser));
+
+      // Close the delete modal
+      setShowDelete(false);
+   }
+
    return (
       <div className="table-wrapper">
          {/*If isLoading is true => render spinner */}
@@ -60,6 +78,12 @@ const Table = () => {
             <CreateUser
                onClose={() => setShowCreate(false)}
                onCreateClick={userCreateHandler}
+            />
+         )}
+         {showDelete && (
+            <DeleteUser
+               onClose={() => setShowDelete(false)}
+               onDeleteClick={userDeleteHandler}
             />
          )}
 
@@ -172,6 +196,7 @@ const Table = () => {
                      lastName={user.lastName}
                      phoneNumber={user.phoneNumber}
                      onInfoClick={userInfoClickHandler}
+                     onDeleteClick={deleteButtonClickHandler}
                   />
                ))}
             </tbody>

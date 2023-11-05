@@ -17,6 +17,7 @@ export const getOne = async (userId) => {
 };
 
 export const create = async (data) => {
+   //Done that way to preserve object structure
    const body = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -44,4 +45,11 @@ export const create = async (data) => {
    const result = await response.json();
 
    return result;
+};
+
+export const deleteUser = async (userId) => {
+   const response = await fetch(`${baseUrl}/${userId}`, {
+      method: 'DELETE',
+   });
+   return response;
 };
