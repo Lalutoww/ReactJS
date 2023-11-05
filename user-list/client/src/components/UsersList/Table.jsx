@@ -1,6 +1,7 @@
 import Item from './Item.jsx';
 import { useEffect, useState } from 'react';
 import * as userService from '../../services/userServce.js';
+import Spinner from '../LoadingOverlaps/Spinner.jsx';
 
 const Table = () => {
    const [users, setUsers] = useState([]);
@@ -8,16 +9,17 @@ const Table = () => {
 
    useEffect(() => {
       setIsLoading(true);
-
       userService
          .getAll()
          .then((result) => setUsers(result))
          .catch((err) => console.log(err))
          .finally(() => setIsLoading(false));
    }, []);
-   
+
    return (
       <div className="table-wrapper">
+         {/*If isLoading is true => render spinner */}
+         {isLoading && <Spinner />}
          <table className="table">
             <thead>
                <tr>
