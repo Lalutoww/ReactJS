@@ -5,6 +5,7 @@ import Spinner from '../LoadingOverlaps/Spinner.jsx';
 import Info from './Info.jsx';
 import CreateUser from './CreateUser.jsx';
 import DeleteUser from './DeleteUser.jsx';
+import NoUsers from '../LoadingOverlaps/NoUsers.jsx';
 
 const Table = () => {
    const [users, setUsers] = useState([]);
@@ -13,6 +14,7 @@ const Table = () => {
    const [showInfo, setShowInfo] = useState(false);
    const [showCreate, setShowCreate] = useState(false);
    const [showDelete, setShowDelete] = useState(false);
+   const [showNoUsers, setShowNoUsers] = useState(false);
 
    useEffect(() => {
       setIsLoading(true);
@@ -56,19 +58,31 @@ const Table = () => {
       setShowDelete(true);
    };
 
-   const userDeleteHandler = async() =>{
+   const userDeleteHandler = async () => {
       // Remove user from server
       await userService.deleteUser(selectedUser);
 
       // Remove user from state
-      setUsers(state => state.filter(user => user._id !== selectedUser));
+      setUsers((state) => state.filter((user) => user._id !== selectedUser));
 
       // Close the delete modal
       setShowDelete(false);
-   }
+   };
+
+   useEffect(() => {
+      if (users.length <= 0) {
+         setShowNoUsers(true);
+      } else {
+         setShowNoUsers(false);
+      }
+   }, [users]);
 
    return (
+      
       <div className="table-wrapper">
+         {showNoUsers && (
+            <NoUsers/>
+         )}
          {/*If isLoading is true => render spinner */}
          {isLoading && <Spinner />}
          {showInfo && (
