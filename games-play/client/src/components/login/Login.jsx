@@ -1,5 +1,5 @@
 import AuthContext from '../../contexts/authContext.js';
-import { useForm } from '../../hooks/useForm.js';
+import useForm from '../../hooks/useForm.js';
 import  {useContext} from 'react';
 
 const LoginFormKeys = {
@@ -9,7 +9,7 @@ const LoginFormKeys = {
 
 export default function Login() {
     const {loginSubmitHandler} = useContext(AuthContext);
-   const { values, onChange, onSubmit } = useForm(loginSubmitHandler, {
+const { values, onChange, onSubmit } = useForm(loginSubmitHandler, {
       [LoginFormKeys.Email]: '',
       [LoginFormKeys.Password]: '',
    });
@@ -24,8 +24,8 @@ export default function Login() {
                   type="email"
                   id="email"
                   name={LoginFormKeys.Email}
+                  value={values[LoginFormKeys.Email]}
                   onChange={onChange}
-                  value={LoginFormKeys.Email}
                   placeholder="Sokka@gmail.com"
                />
 
@@ -34,8 +34,8 @@ export default function Login() {
                   type="password"
                   id="login-password"
                   name={LoginFormKeys.Password}
+                  value={values[LoginFormKeys.Password]}
                   onChange={onChange}
-                  value={LoginFormKeys.Password}
                />
                <input type="submit" className="btn submit" value="Login" />
                <p className="field">
