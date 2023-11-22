@@ -14,7 +14,7 @@ import Register from './components/register/Register';
 import GameDetails from './components/game-details/GameDetails';
 
 function App() {
-    const navigate = useNavigate();
+   const navigate = useNavigate();
    const [auth, setAuth] = useState({});
 
    const loginSubmitHandler = async (values) => {
@@ -25,8 +25,20 @@ function App() {
       navigate(Path.Home);
    };
 
+   const registerSubmitHandler = (values) => {
+      console.log(values);
+   };
+
+   const contextValues = {
+      loginSubmitHandler,
+      registerSubmitHandler,
+      username: auth.username || auth.email,
+      email: auth.email,
+      isAuthenticated: !!auth.accessToken,
+   };
+
    return (
-      <AuthContext.Provider value={{ loginSubmitHandler }}>
+      <AuthContext.Provider value={contextValues}>
          <div id="box">
             <Header />
             <Routes>
