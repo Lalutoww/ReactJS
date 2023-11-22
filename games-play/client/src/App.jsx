@@ -1,7 +1,9 @@
-import { Routes, Route } from 'react-router-dom';
-
 import { useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+
+import * as authService from './services/authService.js';
 import AuthContext from './contexts/authContext.js';
+import Path from './paths.js';
 
 import Header from './components/header/Header';
 import Home from './components/home/Home';
@@ -12,10 +14,15 @@ import Register from './components/register/Register';
 import GameDetails from './components/game-details/GameDetails';
 
 function App() {
+    const navigate = useNavigate();
    const [auth, setAuth] = useState({});
 
-   const loginSubmitHandler = (values) => {
-      console.log(values)
+   const loginSubmitHandler = async (values) => {
+      const result = await authService.login(values.email, values.password);
+
+      setAuth(result);
+
+      navigate(Path.Home);
    };
 
    return (
@@ -23,12 +30,12 @@ function App() {
          <div id="box">
             <Header />
             <Routes>
-               <Route path="/" element={<Home />} />
-               <Route path="/games" element={<GameList />} />
-               <Route path="/games/create" element={<GameCreate />} />
-               <Route path="/login" element={<Login />} />
-               <Route path="/register" element={<Register />} />
-               <Route path="/games/:gameId" element={<GameDetails />} />
+               <Route path={Path.Home} element={<Home />} />
+               <Route path={Path.Games} element={<GameList />} />
+               <Route path={Path.Create} element={<GameCreate />} />
+               <Route path={Path.Login} element={<Login />} />
+               <Route path={Path.Register} element={<Register />} />
+               <Route path={Path.Details} element={<GameDetails />} />
             </Routes>
          </div>
       </AuthContext.Provider>
