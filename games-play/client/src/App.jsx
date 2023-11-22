@@ -12,6 +12,7 @@ import GameCreate from './components/game-create/GameCreate';
 import Login from './components/login/Login';
 import Register from './components/register/Register';
 import GameDetails from './components/game-details/GameDetails';
+import Logout from './components/logout/Logout.jsx';
 
 function App() {
    const navigate = useNavigate();
