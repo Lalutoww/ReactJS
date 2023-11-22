@@ -15,27 +15,40 @@ import GameDetails from './components/game-details/GameDetails';
 
 function App() {
    const navigate = useNavigate();
-   const [auth, setAuth] = useState({});
+   const [auth, setAuth] = useState(() => {
+      localStorage.removeItem('accessToken');
+
+      return {};
+   });
 
    const loginSubmitHandler = async (values) => {
       const result = await authService.login(values.email, values.password);
 
       setAuth(result);
+      localStorage.setItem('accessToken', result.accessToken);
 
       navigate(Path.Home);
    };
 
-   const registerSubmitHandler = async(values) => {
+   const registerSubmitHandler = async (values) => {
       const result = await authService.register(values.email, values.password);
 
       setAuth(result);
+      localStorage.setItem('accessToken', result.accessToken);
 
       navigate(Path.Home);
+   };
+
+   const logoutHandler = () => {
+      setAuth({});
+
+      localStorage.removeItem('accessToken');
    };
 
    const contextValues = {
       loginSubmitHandler,
       registerSubmitHandler,
+      logoutHandler,
       username: auth.username || auth.email,
       email: auth.email,
       isAuthenticated: !!auth.accessToken,
@@ -52,6 +65,7 @@ function App() {
                <Route path={Path.Login} element={<Login />} />
                <Route path={Path.Register} element={<Register />} />
                <Route path={Path.Details} element={<GameDetails />} />
+               <Route path={Path.Logout} element={<Logout />} />
             </Routes>
          </div>
       </AuthContext.Provider>
