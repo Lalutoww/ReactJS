@@ -1,4 +1,4 @@
-import AuthContext from '../../contexts/authContext.js';
+import AuthContext from '../../contexts/authContext.jsx';
 import useForm from '../../hooks/useForm.js';
 import  {useContext} from 'react';
 
